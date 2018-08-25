@@ -480,6 +480,11 @@ bool TWPartition::Process_Fstab_Line(const char *fstab_line, bool Display_Error,
 			Backup_Display_Name = Display_Name;
 			DataManager::SetValue("tw_boot_is_mountable", 1);
 			Can_Be_Backed_Up = true;
+		} else if (Mount_Point == "/ramdisk") {
+			Display_Name = "ramdisk";
+			Backup_Display_Name = Display_Name;
+			Wipe_Available_in_GUI = true;
+			Can_Be_Backed_Up = true;
 		} else if (Mount_Point == "/vendor") {
 			Display_Name = "Vendor";
 			Backup_Display_Name = Display_Name;

@@ -262,9 +262,9 @@ int OpenRecoveryScript::run_script_file(void) {
 						} else if ((value2[i] == 'C' || value2[i] == 'c') && Partition_List.find("/cache;") != string::npos) {
 							Restore_List += "/cache;";
 							gui_msg("cache=Cache");
-						} else if ((value2[i] == 'R' || value2[i] == 'r') && Partition_List.find("/recovery;") != string::npos) {
-							Restore_List += "/recovery;";
-							gui_msg("recovery=Recovery");
+						} else if ((value2[i] == 'R' || value2[i] == 'r') && Partition_List.find("/ramdisk;") != string::npos) {
+							Restore_List += "/ramdisk;";
+							gui_msg("ramdisk=Ramdisk");
 						} else if ((value2[i] == 'B' || value2[i] == 'b') && Partition_List.find("/boot;") != string::npos) {
 							Restore_List += "/boot;";
 							gui_msg("boot=Boot");
