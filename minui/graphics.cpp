@@ -525,7 +525,7 @@ void gr_flip() {
   gr_draw = gr_backend->Flip();
 }
 
-int gr_init(void)
+int gr_init_real(void)
 {
   gr_init_font();
 
@@ -576,6 +576,25 @@ int gr_init(void)
   gr_flip();
 
   return 0;
+}
+
+/*
+ * FIXME: This is a total hack.
+ *
+ * Round 1
+ * framebuffer: fd 4 (480 x 800)
+ *
+ * Round 2
+ * framebuffer: fd 6 (480 x 800)
+ *
+*/
+int gr_init(void) {
+    int ret;
+    // Round 1
+    gr_init_real();
+    // Return the result of round 2
+    ret = gr_init_real();
+    return ret;
 }
 
 void gr_exit() {
