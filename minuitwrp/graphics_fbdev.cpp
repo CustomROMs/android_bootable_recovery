@@ -274,8 +274,10 @@ static GRSurface* fbdev_init(minui_backend* backend) {
 
     printf("framebuffer: %d (%d x %d)\n", fb_fd, gr_draw->width, gr_draw->height);
 
+#ifndef TW_NO_SCREEN_BLANK
     fbdev_blank(backend, true);
     fbdev_blank(backend, false);
+#endif
 
     smem_len = fi.smem_len;
 

@@ -622,8 +622,10 @@ GRSurface* MinuiBackendOverlay::Init() {
 
     printf("framebuffer: %d (%d x %d)\n", fb_fd, gr_draw->width, gr_draw->height);
 
+#ifndef TW_NO_SCREEN_BLANK
     Blank(true);
     Blank(false);
+#endif
 
     if (!alloc_ion_mem(fi.line_length * vi.yres))
         allocate_overlay(fb_fd, gr_framebuffer);

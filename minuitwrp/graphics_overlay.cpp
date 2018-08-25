@@ -636,8 +636,10 @@ static GRSurface* overlay_init(minui_backend* backend) {
 
     printf("framebuffer: %d (%d x %d)\n", fb_fd, gr_draw->width, gr_draw->height);
 
+#ifndef TW_NO_SCREEN_BLANK
     overlay_blank(backend, true);
     overlay_blank(backend, false);
+#endif
 
     if (!alloc_ion_mem(frame_size))
         allocate_overlay(fb_fd, gr_framebuffer);
