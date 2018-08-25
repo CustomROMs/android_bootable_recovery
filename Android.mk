@@ -429,6 +429,9 @@ ifeq ($(BOARD_HAS_NO_REAL_SDCARD),)
         LOCAL_ADDITIONAL_DEPENDENCIES += sgdisk_static
     endif
 endif
+ifeq ($(TW_EXCLUDE_PARTED), true)
+    LOCAL_ADDITIONAL_DEPENDENCIES += parted
+endif
 ifneq ($(TW_EXCLUDE_ENCRYPTED_BACKUPS), true)
     LOCAL_ADDITIONAL_DEPENDENCIES += openaes openaes_license
 endif
