@@ -16,7 +16,7 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 23; echo $$?),0)
         setprop
 endif
 
-# If busybox does not have SELinux support, provide these tools with toolbox.
+# If toybox does not have SELinux support, provide these tools with toolbox.
 # Note that RECOVERY_BUSYBOX_TOOLS will be empty if TW_USE_TOOLBOX == true.
 TOOLS_FOR_SELINUX := \
     ls
@@ -35,7 +35,7 @@ endif
 OUR_TOOLS += $(filter-out $(RECOVERY_BUSYBOX_TOOLS), $(TOOLS_FOR_SELINUX))
 
 # toolbox setenforce is used during init, so it needs to be included here
-# symlink is omitted at the very end if busybox already provides this
+# symlink is omitted at the very end if toybox already provides this
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 23; echo $$?),0)
    OUR_TOOLS += setenforce
 endif
@@ -235,7 +235,7 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 22; echo $$?),0)
     # provides these tools. Toybox does not allow for easy dynamic
     # configuration, so we would have to include the entire toybox binary
     # which takes up more space than is necessary so long as we are still
-    # including busybox.
+    # including toybox.
 ifneq ($(TW_USE_TOOLBOX), true)
     LOCAL_SRC_FILES += \
         ../../../$(TWRP_TOOLBOX_PATH)/setprop.c \
@@ -273,7 +273,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS += -Wno-unused-parameter -Wno-unused-const-variable
 
 # Including this will define $(intermediates) below
-include $(BUILD_EXECUTABLE)
+#include $(BUILD_EXECUTABLE)
 
 $(LOCAL_PATH)/toolbox.c: $(intermediates)/tools.h
 
@@ -290,7 +290,7 @@ $(TOOLS_H):
 	$(transform-generated-source)
 
 # toolbox setenforce is used during init in non-symlink form, so it was
-# required to be included as part of the suite above. if busybox already
+# required to be included as part of the suite above. if toybox already
 # provides setenforce, we can omit the toolbox symlink
 TEMP_TOOLS := $(filter-out $(RECOVERY_BUSYBOX_TOOLS), $(ALL_TOOLS))
 ALL_TOOLS := $(TEMP_TOOLS)

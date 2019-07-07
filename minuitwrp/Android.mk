@@ -52,11 +52,11 @@ endif
 ifneq ($(wildcard external/libdrm/Android.*),)
   LOCAL_CFLAGS += -DHAS_DRM
   LOCAL_SRC_FILES += graphics_drm.cpp
-  ifneq ($(wildcard external/libdrm/Android.common.mk),)
-    LOCAL_WHOLE_STATIC_LIBRARIES += libdrm_platform
-  else
+  #ifneq ($(wildcard external/libdrm/Android.common.mk),)
+  #  LOCAL_WHOLE_STATIC_LIBRARIES += libdrm_platform
+  #else
     LOCAL_WHOLE_STATIC_LIBRARIES += libdrm
-  endif
+  #endif
 endif
 
 LOCAL_C_INCLUDES += \
@@ -203,5 +203,5 @@ LOCAL_SHARED_LIBRARIES += libcutils liblog libutils
 endif
 LOCAL_MODULE_TAGS := eng
 LOCAL_MODULE := libminuitwrp
-
+LOCAL_CFLAGS += -Os
 include $(BUILD_SHARED_LIBRARY)

@@ -82,7 +82,7 @@ ifneq ($(TARGET_RECOVERY_REBOOT_SRC),)
 endif
 
 LOCAL_MODULE := recovery
-
+LOCAL_CFLAGS += -Os
 #LOCAL_FORCE_STATIC_EXECUTABLE := true
 
 #ifeq ($(TARGET_USERIMAGES_USE_F2FS),true)
@@ -187,8 +187,9 @@ endif
 LOCAL_C_INCLUDES += external/libselinux/include
 LOCAL_SHARED_LIBRARIES += libselinux
 
+LOCAL_CFLAGS += -Os
 ifeq ($(AB_OTA_UPDATER),true)
-    LOCAL_CFLAGS += -DAB_OTA_UPDATER=1
+    LOCAL_CFLAGS +=  -DAB_OTA_UPDATER=1
     LOCAL_SHARED_LIBRARIES += libhardware android.hardware.boot@1.0
     TWRP_REQUIRED_MODULES += libhardware
 endif
@@ -429,7 +430,7 @@ ifneq ($(TW_USE_TOOLBOX), true)
     ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
         LOCAL_POST_INSTALL_CMD := \
             $(hide) mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/sbin && \
-            ln -sf /sbin/busybox $(TARGET_RECOVERY_ROOT_OUT)/sbin/sh
+            ln -sf /sbin/toybox $(TARGET_RECOVERY_ROOT_OUT)/sbin/sh
     endif
 else
     ifneq ($(wildcard external/toybox/Android.mk),)
@@ -537,6 +538,7 @@ include $(BUILD_EXECUTABLE)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := file_contexts_text
+LOCAL_CFLAGS += -Os
 LOCAL_MODULE_TAGS := optional
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 28; echo $$?),0)
     LOCAL_REQUIRED_MODULES := file_contexts.bin
@@ -550,8 +552,8 @@ include $(BUILD_PHONY_PACKAGE)
 
 ifneq ($(TW_USE_TOOLBOX), true)
 include $(CLEAR_VARS)
-# Create busybox symlinks... gzip and gunzip are excluded because those need to link to pigz instead
-BUSYBOX_LINKS := $(shell cat external/busybox/busybox-full.links)
+# Create toybox symlinks... gzip and gunzip are excluded because those need to link to pigz instead
+BUSYBOX_LINKS := $(shell cat external/toybox/toybox-full.links)
 exclude := tune2fs mke2fs mkdosfs mkfs.vfat gzip gunzip
 
 # Having /sbin/modprobe present on 32 bit devices with can cause a massive
@@ -564,7 +566,7 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 22; echo $$?),0)
     endif
 endif
 
-# If busybox does not have restorecon, assume it does not have SELinux support.
+# If toybox does not have restorecon, assume it does not have SELinux support.
 # Then, let toolbox provide 'ls' so -Z is available to list SELinux contexts.
 ifeq ($(filter restorecon, $(notdir $(BUSYBOX_LINKS))),)
     exclude += ls
@@ -572,7 +574,7 @@ endif
 
 RECOVERY_BUSYBOX_TOOLS := $(filter-out $(exclude), $(notdir $(BUSYBOX_LINKS)))
 RECOVERY_BUSYBOX_SYMLINKS := $(addprefix $(TARGET_RECOVERY_ROOT_OUT)/sbin/, $(RECOVERY_BUSYBOX_TOOLS))
-$(RECOVERY_BUSYBOX_SYMLINKS): BUSYBOX_BINARY := busybox
+$(RECOVERY_BUSYBOX_SYMLINKS): BUSYBOX_BINARY := toybox
 $(RECOVERY_BUSYBOX_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 	@echo "Symlink: $@ -> $(BUSYBOX_BINARY)"
 	@mkdir -p $(dir $@)
@@ -580,7 +582,7 @@ $(RECOVERY_BUSYBOX_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 	$(hide) ln -sf $(BUSYBOX_BINARY) $@
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := busybox_symlinks
+LOCAL_MODULE := toybox_symlinks
 LOCAL_MODULE_TAGS := optional
 LOCAL_ADDITIONAL_DEPENDENCIES := $(RECOVERY_BUSYBOX_SYMLINKS)
 ifneq (,$(filter $(PLATFORM_SDK_VERSION),16 17 18))
@@ -627,6 +629,7 @@ LOCAL_CFLAGS += -D_XOPEN_SOURCE -D_GNU_SOURCE
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libfusesideload
+LOCAL_CFLAGS += -Os
 LOCAL_SHARED_LIBRARIES := libcutils libc
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
     LOCAL_C_INCLUDES := $(LOCAL_PATH)/libmincrypt/includes
@@ -652,6 +655,7 @@ LOCAL_CFLAGS += -D_XOPEN_SOURCE -D_GNU_SOURCE
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libfusesideload
+LOCAL_CFLAGS += -Os
 LOCAL_SHARED_LIBRARIES := libcutils libc
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
     LOCAL_C_INCLUDES := $(LOCAL_PATH)/libmincrypt/includes
@@ -676,6 +680,7 @@ LOCAL_CFLAGS := \
     -Wall \
     -Werror
 LOCAL_MODULE := libmounts
+LOCAL_CFLAGS += -Os
 LOCAL_STATIC_LIBRARIES := libbase
 include $(BUILD_STATIC_LIBRARY)
 
@@ -692,6 +697,7 @@ ifeq ($(AB_OTA_UPDATER),true)
 endif
 
 LOCAL_MODULE := librecovery
+LOCAL_CFLAGS += -Os
 LOCAL_STATIC_LIBRARIES := \
     libminui \
     libotautil \
@@ -711,6 +717,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := libaosprecovery
 LOCAL_MODULE_TAGS := eng optional
 LOCAL_CFLAGS := -std=gnu++0x
+LOCAL_CFLAGS += -Os
 LOCAL_SRC_FILES := adb_install.cpp legacy_property_service.cpp set_metadata.cpp tw_atomic.cpp installcommand.cpp zipwrap.cpp
 LOCAL_SHARED_LIBRARIES += libc liblog libcutils libmtdutils libfusesideload libselinux libminzip
 LOCAL_CFLAGS += -DRECOVERY_API_VERSION=$(RECOVERY_API_VERSION)
@@ -756,6 +763,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_CLANG := true
 LOCAL_MODULE := libverifier
+LOCAL_CFLAGS += -Os
 LOCAL_SRC_FILES := \
     asn1_decoder.cpp \
     verifier.cpp
@@ -775,7 +783,7 @@ LOCAL_CFLAGS := -Wall -Werror
 
 # Should match TARGET_RECOVERY_UI_LIB in BoardConfig.mk.
 LOCAL_MODULE := librecovery_ui_wear
-
+LOCAL_CFLAGS += -Os
 include $(BUILD_STATIC_LIBRARY)
 
 # vr headset default device
@@ -787,7 +795,7 @@ LOCAL_CFLAGS := -Wall -Werror
 
 # should match TARGET_RECOVERY_UI_LIB set in BoardConfig.mk
 LOCAL_MODULE := librecovery_ui_vr
-
+LOCAL_CFLAGS += -Os
 include $(BUILD_STATIC_LIBRARY)
 
 commands_recovery_local_path := $(LOCAL_PATH)

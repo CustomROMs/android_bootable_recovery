@@ -28,6 +28,8 @@ LOCAL_SRC_FILES := \
 
 LOCAL_C_INCLUDES := external/libcxx/include external/libpng
 
+LOCAL_CFLAGS += -Os
+
 ifeq ($(TW_TARGET_USES_QCOM_BSP), true)
   LOCAL_CFLAGS += -DMSM_BSP
   LOCAL_SRC_FILES += graphics_overlay.cpp
@@ -58,11 +60,11 @@ ifeq ($(TW_NEW_ION_HEAP), true)
 endif
 
 LOCAL_STATIC_LIBRARIES += libpng libbase
-ifneq ($(wildcard external/libdrm/Android.common.mk),)
-LOCAL_WHOLE_STATIC_LIBRARIES += libdrm_platform
-else
+#ifneq ($(wildcard external/libdrm/Android.common.mk),)
+#LOCAL_WHOLE_STATIC_LIBRARIES += libdrm_platform
+#else
 LOCAL_WHOLE_STATIC_LIBRARIES += libdrm
-endif
+#endif
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26; echo $$?),0)
     LOCAL_CFLAGS += -DHAS_LIBSYNC
     LOCAL_WHOLE_STATIC_LIBRARIES += libsync_recovery
@@ -73,7 +75,7 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/include
 
 LOCAL_MODULE := libminui
-
+LOCAL_CFLAGS += -Os
 LOCAL_CLANG := true
 
 # This used to compare against values in double-quotes (which are just
@@ -131,6 +133,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_CLANG := true
 LOCAL_MODULE := libminui
+LOCAL_CFLAGS += -Os
 LOCAL_WHOLE_STATIC_LIBRARIES += libminui
 LOCAL_SHARED_LIBRARIES := \
     libpng \

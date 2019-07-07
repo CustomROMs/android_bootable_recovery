@@ -130,6 +130,10 @@ ifeq ($(TW_EXTRA_LANGUAGES),true)
     TWRP_RES += $(LOCAL_PATH)/theme/extra-languages/languages
 endif
 
+TARGET_SCREEN_HEIGHT := 1280
+TARGET_SCREEN_WIDTH := 720
+
+
 ifeq ($(TW_CUSTOM_THEME),)
     ifeq ($(TW_THEME),)
         ifeq ($(DEVICE_RESOLUTION),)
